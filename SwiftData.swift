@@ -1058,12 +1058,14 @@ public struct SwiftData {
                     var row = SDRow()
                     for i: Int32 in 0 ..< columnCount {
                         let columnName = String(cString: sqlite3_column_name(pStmt, i))
+                        
+                        //this failing when select count(*) c from xxxx
                         //println("columnName = \(columnName)")
-                        if let columnType = String(validatingUTF8: sqlite3_column_decltype(pStmt, i))?.uppercased() {
-                            if let columnValue: AnyObject = getColumnValue(statement: pStmt!, index: i, type: columnType) {
-                                row[columnName] = SDColumn(obj: columnValue)
-                            }
-                        } else {
+//                        if let columnType = String(validatingUTF8: sqlite3_column_decltype(pStmt, i))?.uppercased() {
+//                            if let columnValue: AnyObject = getColumnValue(statement: pStmt!, index: i, type: columnType) {
+//                                row[columnName] = SDColumn(obj: columnValue)
+//                            }
+//                        } else {
                             var columnType = ""
                             switch sqlite3_column_type(pStmt, i) {
                             case SQLITE_INTEGER:
@@ -1084,7 +1086,7 @@ public struct SwiftData {
                             if let columnValue: AnyObject = getColumnValue(statement: pStmt!, index: i, type: columnType) {
                                 row[columnName] = SDColumn(obj: columnValue)
                             }
-                        }
+                        //}
                     }
                     resultSet.append(row)
                 } else if status == SQLITE_DONE {
